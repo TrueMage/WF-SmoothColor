@@ -19,15 +19,15 @@ namespace WF_GradientBG
         int gB = 0;
         bool reached = false;
 
-        //private Color[] colors = new Color[]
-        //    { Color.Black, Color.Red, Color.Yellow, Color.Green, Color.Blue, Color.Pink, Color.White };
+        private Color[] colors = new Color[]
+           { Color.Black, Color.Red, Color.Yellow, Color.Green, Color.Blue, Color.Pink, Color.White };
 
         public Form1()
         {
             InitializeComponent();
-            gR = rand.Next(0, 256);
-            gG = rand.Next(0, 256);
-            gB = rand.Next(0, 256);
+            gR = colors[_currentColor].R;
+            gG = colors[_currentColor].G;
+            gB = colors[_currentColor].B;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -39,22 +39,21 @@ namespace WF_GradientBG
         {
             if (reached)
             {
-                if (curR <= 0 && curB <= 0 && curG <= 0)
-                {
-                    gR = rand.Next(0, 256);
-                    gG = rand.Next(0, 256);
-                    gB = rand.Next(0, 256);
+                if (++_currentColor == colors.Length - 1) _currentColor = 0;
+                gR = colors[_currentColor].R;
+                gG = colors[_currentColor].G;
+                gB = colors[_currentColor].B;
 
-                    reached = false;
-                }
-                BackColor = Color.FromArgb(255, curR == 0 ? 0 : curR--, curG == 0 ? 0 : curG--, curB == 0 ? 0 : curB--);
+                reached = false;
             }
             else
             {
-                if (curB != gB) BackColor = Color.FromArgb(255, curR, curG, curB++);
-                else if (curR != gR) BackColor = Color.FromArgb(255, curR++, curG, curB);
-                else if (curG != gG) BackColor = Color.FromArgb(255, curR, curG++, curB);
-                else reached = true;
+                BackColor = Color.FromArgb(255,
+                    curR == gR ? curR : curR < gR ? curR++ : curR--,
+                    curG == gG ? curG : curG < gG ? curG++ : curG--,
+                    curB == gB ? curB : curB < gB ? curB++ : curB--
+                    );
+                if(curR == gR && curB == gB && curG == gG) reached = true;
             }
         }
     }
